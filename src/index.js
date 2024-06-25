@@ -1,18 +1,19 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
-const brevoTransport = require("nodemailer-brevo-transport");
+const BrevoTransport = require("nodemailer-brevo-transport");
 require("dotenv").config();
 
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
 
 const app = express();
 const APP_PORT = process.env.APP_PORT || 3000;
+const APP_HOST = process.env.APP_HOST || '0.0.0.0';
 
 app.use(bodyParser.json());
 
 const transporter = nodemailer.createTransport(
-  brevoTransport({
+  new BrevoTransport({
     apiKey: BREVO_API_KEY,
   })
 );
@@ -39,6 +40,6 @@ app.post("/send-email-by-brevo", async (req, res) => {
   }
 });
 
-app.listen(APP_PORT, () => {
-  console.log(`Server running at http://localhost:${port}/`);
+app.listen(APP_PORT, APP_HOST, () => {
+  console.log(`Server running at http://${APP_HOST}:${APP_PORT}/`);
 });
